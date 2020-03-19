@@ -7,6 +7,10 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
+androidExtensions {
+    experimental = true
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -49,4 +53,11 @@ dependencies {
     //Firebase Auth
     implementation 'com.google.firebase:firebase-auth:19.0.0'
     implementation 'com.android.support:design:28.0.0'
+
+    //Groupie Dependencies
+    implementation "com.xwray:groupie:2.1.0"
+
+    //Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
 }

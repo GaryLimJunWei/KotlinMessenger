@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#88E476"
-    tools:context=".RegisterActivity" >
+    tools:context=".registerlogin.RegisterActivity" >
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/select_image"
@@ -30,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/username_edittext"
+        android:id="@+id/loginEmail"
         android:layout_width="319dp"
         android:layout_height="61dp"
         android:layout_marginTop="64dp"
@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@+id/select_photo_button" />
 
     <EditText
-        android:id="@+id/email_edittext"
+        android:id="@+id/loginPw"
         android:layout_width="319dp"
         android:layout_height="61dp"
         android:layout_marginTop="8dp"
@@ -56,9 +56,9 @@
         android:inputType="textEmailAddress"
         android:paddingLeft="20dp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/username_edittext"
-        app:layout_constraintStart_toStartOf="@+id/username_edittext"
-        app:layout_constraintTop_toBottomOf="@+id/username_edittext" />
+        app:layout_constraintEnd_toEndOf="@+id/loginEmail"
+        app:layout_constraintStart_toStartOf="@+id/loginEmail"
+        app:layout_constraintTop_toBottomOf="@+id/loginEmail" />
 
     <EditText
         android:id="@+id/password_edittext"
@@ -71,12 +71,12 @@
         android:inputType="textPassword"
         android:paddingLeft="20dp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/email_edittext"
-        app:layout_constraintStart_toStartOf="@+id/email_edittext"
-        app:layout_constraintTop_toBottomOf="@+id/email_edittext" />
+        app:layout_constraintEnd_toEndOf="@+id/loginPw"
+        app:layout_constraintStart_toStartOf="@+id/loginPw"
+        app:layout_constraintTop_toBottomOf="@+id/loginPw" />
 
     <Button
-        android:id="@+id/register_btn"
+        android:id="@+id/login_btn"
         android:background="@drawable/rounded_button"
         android:layout_width="319dp"
         android:layout_height="61dp"
@@ -93,9 +93,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/register_btn"
+        app:layout_constraintEnd_toEndOf="@+id/login_btn"
         app:layout_constraintHorizontal_bias="0.461"
-        app:layout_constraintStart_toStartOf="@+id/register_btn"
+        app:layout_constraintStart_toStartOf="@+id/login_btn"
         tools:layout_editor_absoluteY="0dp" />
 
     <TextView
@@ -107,8 +107,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Already have an account?"
-        app:layout_constraintEnd_toEndOf="@+id/register_btn"
+        app:layout_constraintEnd_toEndOf="@+id/login_btn"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="@+id/register_btn"
-        app:layout_constraintTop_toBottomOf="@+id/register_btn" />
+        app:layout_constraintStart_toStartOf="@+id/login_btn"
+        app:layout_constraintTop_toBottomOf="@+id/login_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

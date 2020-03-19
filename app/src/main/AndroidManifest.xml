@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.kotlinmessenger">
 
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -10,16 +11,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".RegisterActivity">
+        <activity android:name="com.example.kotlinmessenger.messages.LatestMessagesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".registerlogin.RegisterActivity"/>
+        <activity android:name=".registerlogin.LoginActivity" />
+        <activity android:name="com.example.kotlinmessenger.messages.NewMessageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.kotlinmessenger.messages.LatestMessagesActivity" />
+        </activity>
+        <activity android:name="com.example.kotlinmessenger.messages.ChatLogActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.kotlinmessenger.messages.LatestMessagesActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.kotlinmessenger
+package com.example.kotlinmessenger.registerlogin
 
 import android.app.Activity
 import android.content.Intent
@@ -9,6 +9,10 @@ import android.util.Log
 import android.util.Patterns
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kotlinmessenger.R
+import com.example.kotlinmessenger.models.User
+import com.example.kotlinmessenger.Utils.toast
+import com.example.kotlinmessenger.messages.LatestMessagesActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -30,7 +34,7 @@ class RegisterActivity : AppCompatActivity()
 
         mAuth = FirebaseAuth.getInstance()
 
-        register_btn.setOnClickListener {
+        login_btn.setOnClickListener {
 
             validateRegister()
         }
@@ -38,7 +42,7 @@ class RegisterActivity : AppCompatActivity()
         already_have_an_acc.setOnClickListener {
             Log.d("MainAcitivty","Try to show login activity")
 
-            val intent = Intent(this,LoginActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
 
         }
@@ -85,7 +89,7 @@ class RegisterActivity : AppCompatActivity()
         // This intent will open the camera
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also {
                 pictureIntent ->
-            pictureIntent.resolveActivity(this?.packageManager!!)?.also {
+            pictureIntent.resolveActivity(this.packageManager!!)?.also {
                 startActivityForResult(pictureIntent,REQUEST_IMAGE_CAPTURE)
             }
         }
@@ -96,6 +100,7 @@ class RegisterActivity : AppCompatActivity()
 
         if(requestCode == 0 && resultCode == Activity.RESULT_OK && data != null)
         {
+            //Proceed and check what the selected image was
             Log.d("RegisterActivity","Photo was selected")
 
             selectedPhotoUri = data.data
@@ -109,58 +114,24 @@ class RegisterActivity : AppCompatActivity()
 
     }
 
-//    private fun uploadImageAndSaveUri(bitmap: Bitmap)
-//    {
-//        val baos = ByteArrayOutputStream()
-//        val storageRef = FirebaseStorage.getInstance().reference
-//            .child("pics/${FirebaseAuth.getInstance().currentUser?.uid}")
-//        bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos)
-//        val image = baos.toByteArray()
-//
-//        val upload = storageRef.putBytes(image)
-//
-//        progress_bar.visibility = View.VISIBLE
-//        upload.addOnCompleteListener { uploadTask ->
-//            progress_bar.visibility = View.INVISIBLE
-//            if (uploadTask.isSuccessful)
-//            {
-//                storageRef.downloadUrl.addOnCompleteListener { urlTask ->
-//                    //Using the let operator and only when the value is not NULL then
-//                    // the statement will be executed
-//                    urlTask.result?.let {
-//                        imageUri = it
-//                        this?.toast(imageUri.toString())
-//
-//                        select_photo_button.setImageBitmap(bitmap)
-//                    }
-//                }
-//            }
-//            else
-//            {
-//                uploadTask.exception?.let {
-//                    this?.toast(it.message!!)
-//                }
-//            }
-//        }
-//    }
-
     private fun validateRegister()
     {
 
-        val email = email_edittext.text.toString().trim()
+        Log.d("RegisterActivity","Registering now!!!!!")
+        val email = loginPw.text.toString().trim()
         val password = password_edittext.text.toString().trim()
 
 
         if(email.isEmpty())
         {
-            email_edittext.error = "Email required"
-            email_edittext.requestFocus()
+            loginPw.error = "Email required"
+            loginPw.requestFocus()
             return
         }
         if( !Patterns.EMAIL_ADDRESS.matcher(email).matches())
         {
-            email_edittext.error = "Valid Email required"
-            email_edittext.requestFocus()
+            loginPw.error = "Valid Email required"
+            loginPw.requestFocus()
             return
         }
         if(password.isEmpty() || password.length < 6)
@@ -183,10 +154,9 @@ class RegisterActivity : AppCompatActivity()
                 progress_bar.visibility = View.GONE
                 if(Task.isSuccessful)
                 {
-
-                    login()
+                    //Log.d("","Successfully created user with uid: ${Task.result?.user?.uid}")
+                    val intent = Intent(this, LoginActivity::class.java)
                     toast("Register Successfully!")
-
                     uploadImageToFirebaseStorage()
                 }
                 else
@@ -200,36 +170,12 @@ class RegisterActivity : AppCompatActivity()
     }
 
 
-    // This is from kotlin messenger youtube
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-//    {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        if(requestCode==0 && resultCode == Activity.RESULT_OK && data != null)
-//        {
-//            //proceed and check what the selected image was  ....
-//
-//            Log.d("RegisterActivity","Photo was selected")
-//
-//            // The uri is the location where the image is stored
-//            selectedPhotoUri = data.data
-//
-//            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver,selectedPhotoUri)
-//
-//            val bitmapDrawable = BitmapDrawable(bitmap)
-//            select_photo_button.setBackgroundDrawable(bitmapDrawable)
-//        }
-//    }
-
-
-
-
-
     private fun uploadImageToFirebaseStorage()
     {
         if (selectedPhotoUri == null) return
 
 
+        // Unique ID generator to generate random unique ID and convert it to String
         val filename = UUID.randomUUID().toString()
         val ref = FirebaseStorage.getInstance().getReference("/images/${filename}")
 
@@ -254,11 +200,22 @@ class RegisterActivity : AppCompatActivity()
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
 
-        val user = User(uid,username_edittext.text.toString(),profileImageUrl)
+        val user = User(
+            uid,
+            loginEmail.text.toString(),
+            profileImageUrl
+        )
 
         ref.setValue(user)
             .addOnSuccessListener {
+
+                val intent = Intent(this, LatestMessagesActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
                 Log.d("RegisterActivity","Finally we saved the user to Firebase Database")
+            }
+            .addOnFailureListener {
+                Log.d("","Failed to set value to database : ${it.message}")
             }
 
     }
@@ -266,4 +223,4 @@ class RegisterActivity : AppCompatActivity()
 
 }
 
-class User(val uid:String,val username:String,val profileImageUrl:String)
+
